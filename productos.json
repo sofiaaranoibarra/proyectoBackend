@@ -1,0 +1,10 @@
+[
+  { "id": 1, "nombre": "Mouse", "marca": "Razer", "precio": 25000 },
+  { "id": 2, "nombre": "Teclado", "marca": "LG", "precio": 48000 },
+  { "id": 3, "nombre": "Monitor", "marca": "Samsung", "precio": 350000 },
+  { "id": 4, "nombre": "Impresora", "marca": "Epson", "precio": 250000 }, 
+  { "id": 5, "nombre": "Pendrive", "marca": "Kingstone", "precio": 65000 }, 
+  { "id": 6, "nombre": "Auriculares", "marca": "SteelSeries", "precio": 125000 }, 
+  { "id": 7, "nombre": "Joystick", "marca": "PlayStation", "precio": 98000 }, 
+  { "id": 8, "nombre": "Parlantes", "marca": "Panasonic", "precio": 85000 }
+]
