@@ -23,16 +23,16 @@ El objetivo principal es comprender el funcionamiento de un backend básico, el 
 
 ## 📁 Estructura del proyecto
 
-PROYECTOBACKEND
-│
-├── node_modules/                  # Dependencias del proyecto
-├── postman/                       # Colección de Postman
-├── .gitignore                     # Archivos ignorados por Git
-├── package-lock.json              # Control de versiones de dependencias
-├── package.json                   # Configuración del proyecto (ES Modules)
-├── productos.json                 # Base de datos simulada
-├── README.md                      # Documentación del proyecto
-└── server.js                      # Servidor Express
+PROYECTOBACKEND:
+
+- node_modules
+- postman
+- .gitignore
+- package-lock.json
+- package.json
+- productos.json
+- README.md
+- server.js
 
 ---
 
