@@ -27,7 +27,7 @@ router.post('/', upload.single('miArchivo'), (req, res) => {
 
     res.render('upload', {
         title: 'Subir Archivo',
-        msg: `Archivo ${req.file.originalname} subido con éxito.!`,
+        msg: `Archivo ${req.file.originalname} subido con éxito ✅`,
         fileUrl: `/uploads/${file.filename}`,
         isImage: file.mimetype.startsWith('image/')
     })
