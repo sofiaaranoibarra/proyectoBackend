@@ -1,11 +1,5 @@
 [
   {
-    "id": 1,
-    "nombre": "Microprocesador",
-    "marca": "MSI",
-    "precio": 500000
-  },
-  {
     "id": 2,
     "nombre": "Teclado",
     "marca": "LG",

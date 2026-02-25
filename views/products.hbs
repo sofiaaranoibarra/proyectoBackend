@@ -1,0 +1,15 @@
+{{!< main}} {{!-- extiende de main.hbs --}} <section class="container">
+    <h2>¡Bienvenido!</h2>
+    {{#if msg}}
+    <p class="alert">{{msg}}</p>
+    {{/if}}
+    <h3>Productos</h3>
+    <ul>
+        {{#each productos}}
+        <li>{{this.nombre}} - {{this.marca}} - ${{this.precio}}</li>
+        {{/each}}
+    </ul>
+    <div class="container logo">
+        <img src="/img/logo.png" alt="Logo">
+    </div>
+    </section>

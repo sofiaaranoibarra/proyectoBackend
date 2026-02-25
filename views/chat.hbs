@@ -1,0 +1,34 @@
+{{!< main}} {{!-- extiende de main.hbs --}} <section class="container">
+    <h2>¡Bienvenido!</h2>
+    {{#if msg}}
+    <p class="alert">{{msg}}</p>
+    {{/if}}
+
+    <section class="container chat-container">
+        <h2>Sistema de Mensajeria</h2>
+        <form id="chatForm" class="mb-3">
+            <input type="text" id="messageInput" placeholder="Escriba su mensaje aqui..." class="form-control mb-2"
+                autocomplete="off">
+                <button type="submit" id="sendBtn">Enviar</button>
+        </form>
+        <ul id="messages"></ul>
+        <button id="disconnectBtn">Desconectarse</button>
+        <div id="sessionClosed" class="session-closed" hidden>
+            <p><span class="session-icon" aria-hidden="true">&#128274;</span> Sesion Cerrada. Por favor califica este chat</p>
+            <div class="rating-stars" id="ratingStars" role="radiogroup" aria-label="Calificacion del chat">
+                <button type="button" class="star-btn" data-value="1" aria-label="1 estrella">☆</button>
+                <button type="button" class="star-btn" data-value="2" aria-label="2 estrellas">☆</button>
+                <button type="button" class="star-btn" data-value="3" aria-label="3 estrellas">☆</button>
+                <button type="button" class="star-btn" data-value="4" aria-label="4 estrellas">☆</button>
+                <button type="button" class="star-btn" data-value="5" aria-label="5 estrellas">☆</button>
+            </div>
+        </div>
+        <div class="container logo">
+            <img src="/img/logo.png" alt="Logo">
+        </div>
+    </section>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>

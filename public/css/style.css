@@ -1,0 +1,249 @@
+:root {
+    --page-bg: #f8f9fa;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: var(--page-bg);
+    color: #333;
+}
+
+/* Sticky footer layout */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #343a40;
+    color: #fff;
+    padding: 1rem;
+}
+
+header h1 {
+    text-align: center;
+    margin: 0 0 0.75rem 0;
+}
+
+nav a {
+    color: #ffd500;
+    margin: 0 0.5rem;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+    background-color: #ffd500;
+    color: #212529;
+    outline: none;
+}
+
+.container {
+    flex: 1;
+    /* Esto empuja el footer al final */
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    background-color: var(--page-bg);
+}
+
+.container img {
+    width: 280px;
+}
+
+footer {
+    background: #343a40;
+    color: #ccc;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    border-top: 2px solid #222;
+}
+
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #212529;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 0.4rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: #f1f1f1;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.file-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.file-picker input[type="file"] {
+    display: none;
+}
+
+.file-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.file-btn:hover {
+    background-color: #0056b3;
+}
+
+.file-name {
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+button {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.alert {
+    color: #155724;
+    background-color: #d4edda;
+    padding: 0.75rem 1rem;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 1rem;
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-volver:hover {
+    background-color: #0056b3;
+}
+
+.session-closed {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.star-btn {
+    background: transparent;
+    border: none;
+    color: #adb5bd;
+    font-size: 1.8rem;
+    line-height: 1;
+    padding: 0.1rem 0.2rem;
+    cursor: pointer;
+}
+
+.star-btn:hover,
+.star-btn.selected {
+    color: #ffc107;
+}
+
+#messages {
+    list-style: none;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background: #fafafa;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.chat-line {
+    margin-bottom: 0.45rem;
+    line-height: 1.35;
+}
+
+.chat-time {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+.chat-user {
+    font-weight: 700;
+}
+
+.chat-system {
+    color: #6c757d;
+    font-style: normal;
+    margin-bottom: 0.45rem;
+}
+
+.chat-system,
+.chat-system * {
+    font-style: normal !important;
+}
+
+.session-icon {
+    display: inline-block;
+    margin-right: 0.35rem;
+    font-size: 1.1rem;
+    vertical-align: middle;
+}
+

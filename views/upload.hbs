@@ -1,0 +1,40 @@
+<section class="container">
+    <h2>Subir Archivo</h2>
+    {{#if msg}}
+    <p class="alert">{{msg}}</p>
+    {{/if}}
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="file-picker">
+            <input type="file" id="miArchivo" name="miArchivo" required>
+            <label for="miArchivo" class="file-btn">Elegir Archivo</label>
+            <span id="fileName" class="file-name">Ning&uacute;n Archivo Seleccionado</span>
+        </div>
+        <button type="submit">Enviar</button>
+    </form>
+
+    {{#if fileUrl}}
+    <div class="container logo">
+        {{#if isImage}}
+        <img src="{{fileUrl}}" alt="Imagen Subida">
+        {{else}}
+        <a href="{{fileUrl}}" download="">Descargar Archivo</a>
+        {{/if}}
+    </div>
+    {{/if}}
+</section>
+
+<script>
+    const input = document.getElementById("miArchivo");
+    const fileName = document.getElementById("fileName");
+
+    input.addEventListener("change", () => {
+        fileName.textContent = input.files.length > 0
+            ? input.files[0].name
+            : "Ning\u00fan Archivo Seleccionado";
+    });
+</script>
+
+ <div class="container logo">
+        <img src="/img/logo.png" alt="Logo">
+    </div>
