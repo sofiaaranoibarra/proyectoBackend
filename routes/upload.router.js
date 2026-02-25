@@ -1,4 +1,4 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -27,7 +27,7 @@ router.post("/", upload.single("miArchivo"), (req, res) => {
 
   res.render("upload", {
     title: "Subir Archivo",
-    msg: "Archivo subido con exito ✅",
+    msg: "Archivo subido con éxito ✅",
     fileUrl: `/uploads/${file.filename}`,
     isImage: file.mimetype.startsWith("image/")
   });
