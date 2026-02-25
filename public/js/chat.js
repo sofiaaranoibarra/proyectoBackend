@@ -87,13 +87,9 @@ if (isDisconnected) {
 
 const savedHistory = sessionStorage.getItem(STORAGE_KEYS.messages);
 if (savedHistory) {
-  chatHistory = JSON.parse(savedHistory);
+  chatHistory = JSON.parse(savedHistory).filter((item) => item.type === "chat");
+  saveHistory();
   chatHistory.forEach((item) => {
-    if (item.type === "system") {
-      addSystemMessage(item.text);
-      return;
-    }
-
     renderChatMessage(item);
   });
 }
@@ -145,8 +141,6 @@ socket.on("chat:message", (data) => {
 socket.on("chat:status", (data) => {
   const text = data.message || "Usuario Desconectado";
   addSystemMessage(text);
-  chatHistory.push({ type: "system", text });
-  saveHistory();
 });
 
 disconnectBtn.addEventListener("click", () => {
