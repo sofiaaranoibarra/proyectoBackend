@@ -1,8 +1,6 @@
 <section class="container">
     <h2>Subir Archivo</h2>
-    {{#if msg}}
-    <p class="alert">{{msg}}</p>
-    {{/if}}
+    <p id="uploadMsg" class="alert" {{#unless msg}}hidden{{/unless}}>{{msg}}</p>
 
     <form action="/upload" method="post" enctype="multipart/form-data">
         <div class="file-picker">
@@ -13,26 +11,65 @@
         <button type="submit">Enviar</button>
     </form>
 
-    {{#if fileUrl}}
-    <div class="container logo">
+    <div id="uploadPreview" class="container logo" {{#unless fileUrl}}hidden{{/unless}}>
+        {{#if fileUrl}}
         {{#if isImage}}
         <img src="{{fileUrl}}" alt="Imagen Subida">
         {{else}}
         <a href="{{fileUrl}}" download="">Descargar Archivo</a>
         {{/if}}
+        {{/if}}
     </div>
-    {{/if}}
 </section>
 
 <script>
+    const UPLOAD_STORAGE_KEY = "upload:lastResult";
+    const navEntry = performance.getEntriesByType("navigation")[0];
+    if (navEntry && navEntry.type === "reload") {
+        sessionStorage.removeItem(UPLOAD_STORAGE_KEY);
+    }
+
     const input = document.getElementById("miArchivo");
     const fileName = document.getElementById("fileName");
+    const uploadMsg = document.getElementById("uploadMsg");
+    const uploadPreview = document.getElementById("uploadPreview");
+
+    const renderUploadResult = (result) => {
+        if (!result) return;
+
+        uploadMsg.textContent = result.msg;
+        uploadMsg.hidden = false;
+        uploadPreview.hidden = false;
+
+        if (result.isImage) {
+            uploadPreview.innerHTML = `<img src="${result.fileUrl}" alt="Imagen Subida">`;
+            return;
+        }
+
+        uploadPreview.innerHTML = `<a href="${result.fileUrl}" download>Descargar Archivo</a>`;
+    };
 
     input.addEventListener("change", () => {
         fileName.textContent = input.files.length > 0
             ? "Archivo seleccionado"
             : "Ning\u00fan Archivo Seleccionado";
     });
+
+    const serverFileUrl = "{{fileUrl}}";
+    if (serverFileUrl) {
+        const result = {
+            msg: "{{msg}}",
+            fileUrl: serverFileUrl,
+            isImage: {{#if isImage}}true{{else}}false{{/if}}
+        };
+        sessionStorage.setItem(UPLOAD_STORAGE_KEY, JSON.stringify(result));
+        renderUploadResult(result);
+    } else {
+        const saved = sessionStorage.getItem(UPLOAD_STORAGE_KEY);
+        if (saved) {
+            renderUploadResult(JSON.parse(saved));
+        }
+    }
 </script>
 
  <div class="container logo">
