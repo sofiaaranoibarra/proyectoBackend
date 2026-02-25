@@ -156,6 +156,7 @@ button:hover {
     border: 1px solid #c3e6cb;
     border-radius: 6px;
     font-weight: bold;
+    text-align: center;
 }
 
 .btn-volver {
