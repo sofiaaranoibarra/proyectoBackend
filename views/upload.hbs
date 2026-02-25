@@ -24,10 +24,6 @@
 
 <script>
     const UPLOAD_STORAGE_KEY = "upload:lastResult";
-    const navEntry = performance.getEntriesByType("navigation")[0];
-    if (navEntry && navEntry.type === "reload") {
-        sessionStorage.removeItem(UPLOAD_STORAGE_KEY);
-    }
 
     const input = document.getElementById("miArchivo");
     const fileName = document.getElementById("fileName");
@@ -62,10 +58,10 @@
             fileUrl: serverFileUrl,
             isImage: {{#if isImage}}true{{else}}false{{/if}}
         };
-        sessionStorage.setItem(UPLOAD_STORAGE_KEY, JSON.stringify(result));
+        localStorage.setItem(UPLOAD_STORAGE_KEY, JSON.stringify(result));
         renderUploadResult(result);
     } else {
-        const saved = sessionStorage.getItem(UPLOAD_STORAGE_KEY);
+        const saved = localStorage.getItem(UPLOAD_STORAGE_KEY);
         if (saved) {
             renderUploadResult(JSON.parse(saved));
         }

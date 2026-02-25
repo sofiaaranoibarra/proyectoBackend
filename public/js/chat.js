@@ -143,7 +143,7 @@ socket.on("chat:message", (data) => {
 });
 
 socket.on("chat:status", (data) => {
-  const text = data.message || "Usuario Desconectado ☹️";
+  const text = data.message || "Usuario Desconectado";
   addSystemMessage(text);
   chatHistory.push({ type: "system", text });
   saveHistory();
@@ -154,6 +154,7 @@ disconnectBtn.addEventListener("click", () => {
 
   isDisconnected = true;
   sessionStorage.setItem(STORAGE_KEYS.disconnected, "true");
+  socket.emit("chat:userDisconnected");
   socket.disconnect();
   setDisconnectedState();
 });

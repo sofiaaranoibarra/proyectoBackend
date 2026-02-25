@@ -80,6 +80,14 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("chat:userDisconnected", () => {
+    if (socket.data.username) {
+      socket.broadcast.emit("chat:status", {
+        message: "Usuario Desconectado ☹️"
+      });
+    }
+  });
+
   const productos = leerArchivo(productosPath);
   socket.emit("productosActualizados", productos);
 
@@ -122,12 +130,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("🔴 Usuario Desconectado");
-
-    if (socket.data.username) {
-      socket.broadcast.emit("chat:status", {
-        message: "Usuario Desconectado ☹️"
-      });
-    }
   });
 });
 
