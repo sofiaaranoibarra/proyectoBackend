@@ -1,44 +1,71 @@
-# 📦 API de Productos – Backend (Node.js + Express)
+# 📦 API de Productos – Backend (Node.js + Express + WebSockets)
+
+---
 
 ## 📌 Descripción
 
-Este proyecto corresponde a un **Trabajo Práctico de Backend** desarrollado con **Node.js y Express**, utilizando el sistema de **ES Modules**.
+Este proyecto corresponde a un Trabajo Práctico de Backend desarrollado con Node.js y Express, utilizando el sistema de ES Modules.
 
-La aplicación implementa una **API REST** para la gestión de productos y utiliza un archivo **JSON como base de datos simulada**, aplicando persistencia de datos mediante el módulo **File System (fs)**.
+La aplicación implementa una API REST para la gestión de productos, utilizando archivos JSON como base de datos simulada. Además, se incorporó Socket.io para permitir comunicación en tiempo real.
 
-El objetivo principal es comprender el funcionamiento de un backend básico, el manejo de rutas, métodos HTTP y la persistencia de información sin utilizar bases de datos reales.
+El objetivo principal es comprender el funcionamiento de un backend completo, combinando métodos HTTP, persistencia de datos, renderizado de vistas y comunicación en tiempo real.
 
 ---
 
 ## 🛠️ Tecnologías utilizadas
 
-* Node.js
-* Express.js
-* ES Modules (`import / export`)
-* File System (fs)
-* Chalk (logs en consola)
-* Postman (pruebas de la API)
+- Node.js  
+- Express.js  
+- ES Modules (import / export)  
+- File System (fs)  
+- Socket.io  
+- Handlebars  
+- Postman  
 
 ---
 
 ## 📁 Estructura del proyecto
 
-PROYECTOBACKEND:
-
-- node_modules
-- postman
-- .gitignore
-- package-lock.json
-- package.json
-- productos.json
-- README.md
-- server.js
+```
+PROYECTOBACKEND
+│
+├── node_modules
+├── postman
+│
+├── public
+│   ├── css
+│   ├── img
+│   └── js
+│
+├── routes
+│   ├── home.router.js
+│   └── upload.router.js
+│
+├── uploads
+│
+├── views
+│   ├── layouts
+│   │   └── main.hbs
+│   │
+│   ├── 404.hbs
+│   ├── chat.hbs
+│   ├── home.hbs
+│   ├── products.hbs
+│   └── upload.hbs
+│
+├── .gitignore
+├── app.js
+├── package-lock.json
+├── package.json
+├── productos.json
+└── README.md
+```
 
 ---
 
 ## ⚙️ Configuración del proyecto (ES Modules)
 
-El proyecto está configurado para utilizar **ES Modules**, lo cual se define en el archivo `package.json`:
+En el archivo `package.json` se configuró:
 
 ```json
 {
@@ -46,123 +73,83 @@ El proyecto está configurado para utilizar **ES Modules**, lo cual se define en
 }
 ```
 
-Gracias a esta configuración, se utiliza la sintaxis moderna `import` para incorporar dependencias en lugar de `require`.
+Esto permite utilizar la sintaxis moderna `import` en lugar de `require`.
 
 ---
 
-El servidor se ejecutará en:
+## 🚀 Cómo ejecutar el proyecto
 
+1. Instalar dependencias:
+
+```
+npm install
+```
+
+2. Ejecutar el servidor:
+
+```
+npm run dev
+```
+
+El servidor se ejecuta en:
+
+```
 http://localhost:3000
+```
 
 ---
 
 ## 💾 Persistencia de datos
 
-La aplicación utiliza un archivo **productos.json** como base de datos simulada.
+Se utiliza el archivo:
 
-Las operaciones de lectura y escritura se realizan mediante el módulo nativo de Node.js **File System (fs)**:
+- `productos.json`
 
-* `fs.readFileSync()` para leer los productos almacenados
-* `fs.writeFileSync()` para guardar los cambios realizados
+como base de datos simulada.
 
-Esto permite que los datos persistan aun cuando el servidor se reinicia.
+Las operaciones de lectura y escritura se realizan con el módulo nativo File System (fs), lo que permite que los datos se mantengan aunque el servidor se reinicie.
 
 ---
 
-## 🎨 Uso de Chalk
+## 🔄 Implementación de WebSockets
 
-Se incorporó la librería **Chalk** para mejorar la visualización de los mensajes que se muestran en la consola del servidor.
+Se integró Socket.io para permitir comunicación en tiempo real.
 
-Chalk permite agregar **colores y estilos** a los `console.log`, facilitando la identificación de:
-
-* Inicio correcto del servidor
-* Peticiones recibidas (GET, POST, PUT, DELETE)
-* Errores y validaciones
-* Acciones exitosas como creación, actualización o eliminación de productos
-
-La librería se utiliza mediante la sintaxis de ES Modules:
+Cuando se crean o modifican productos, se emite un evento mediante:
 
 ```js
-import chalk from "chalk";
+io.emit("productosActualizados", productos);
 ```
 
-El uso de Chalk no afecta el funcionamiento de la API ni las respuestas enviadas a Postman, ya que su función es exclusivamente visual en la consola.
+Esto permite que los clientes conectados reciban actualizaciones automáticamente.
 
 ---
 
-## 📌 Endpoints disponibles
+## 📌 Endpoints principales
 
-### 🔹 GET – Obtener todos los productos
+### Productos
 
-```
-GET /productos
-```
+- GET /productos  
+- GET /productos/:id  
+- POST /productos  
+- PUT /productos/:id  
+- DELETE /productos/:id  
 
----
+### Rutas adicionales
 
-### 🔹 GET – Obtener un producto por ID
-
-```
-GET /productos/:id
-```
-
----
-
-### 🔹 POST – Crear un nuevo producto
-
-```
-POST /productos
-```
-
-**Body (JSON):**
-
-```json
-{
-  "nombre": "Auriculares",
-  "marca": "Sony",
-  "precio": 120000
-}
-```
-
----
-
-### 🔹 PUT – Actualizar un producto
-
-```
-PUT /productos/:id
-```
-
-**Body (JSON):**
-
-```json
-{
-  "precio": 135000
-}
-```
-
----
-
-### 🔹 DELETE – Eliminar un producto
-
-```
-DELETE /productos/:id
-```
-
----
-
-## 🧪 Pruebas con Postman
-
-Se creó una **colección de Postman** para probar todos los endpoints de la API, permitiendo validar el correcto funcionamiento del CRUD de productos.
+- Ruta principal renderizada con Handlebars  
+- Ruta de subida de archivos  
 
 ---
 
 ## 🎓 Objetivos de aprendizaje
 
-* Comprender el funcionamiento de una API REST
-* Manejar rutas y métodos HTTP
-* Implementar persistencia de datos sin bases de datos reales
-* Utilizar ES Modules en Node.js
-* Aplicar Chalk para mejorar la lectura de logs
-* Probar endpoints utilizando Postman
+- Comprender el funcionamiento de una API REST  
+- Manejar rutas y métodos HTTP  
+- Implementar persistencia con archivos JSON  
+- Utilizar ES Modules  
+- Integrar WebSockets  
+- Renderizar vistas con Handlebars  
+- Organizar correctamente la estructura del proyecto  
 
 ---
