@@ -38,20 +38,20 @@ La aplicacion esta organizada en capas simples:
 
 ```mermaid
 flowchart TD
-    cliente[Cliente o Postman] --> app[app.js]
-    app --> middleware[express.json()]
-    middleware --> routers[Routers]
-    routers --> userRouter[user.router.js]
-    routers --> productRouter[product.router.js]
-    routers --> populateRouter[populate.router.js]
-    routers --> aggregationRouter[aggregations.router.js]
-    aggregationRouter --> controller[aggregations.controller.js]
-    userRouter --> userModel[UserModel]
-    userRouter --> productModel[Product]
+    cliente["Cliente o Postman"] --> app["app.js"]
+    app --> middleware["express.json()"]
+    middleware --> routers["Routers"]
+    routers --> userRouter["user.router.js"]
+    routers --> productRouter["product.router.js"]
+    routers --> populateRouter["populate.router.js"]
+    routers --> aggregationRouter["aggregations.router.js"]
+    aggregationRouter --> controller["aggregations.controller.js"]
+    userRouter --> userModel["UserModel"]
+    userRouter --> productModel["Product"]
     productRouter --> productModel
     populateRouter --> userModel
     controller --> productModel
-    userModel --> mongo[(MongoDB)]
+    userModel --> mongo[("MongoDB")]
     productModel --> mongo
 ```
 
@@ -114,30 +114,30 @@ proyectoBackend/
 
 ```mermaid
 flowchart TD
-    root[proyectoBackend]
-    root --> app[app.js]
-    root --> config[config]
-    root --> controllers[controllers]
-    root --> routes[routes]
-    root --> postman[postman]
-    root --> docs[README.md]
+    root["proyectoBackend"]
+    root --> app["app.js"]
+    root --> config["config"]
+    root --> controllers["controllers"]
+    root --> routes["routes"]
+    root --> postman["postman"]
+    root --> docs["README.md"]
 
-    config --> db[db]
-    config --> models[models]
-    db --> connect[connect.config.js]
-    models --> userModel[user.model.js]
-    models --> productModel[product.model.js]
+    config --> db["db"]
+    config --> models["models"]
+    db --> connect["connect.config.js"]
+    models --> userModel["user.model.js"]
+    models --> productModel["product.model.js"]
 
-    controllers --> aggController[aggregations.controller.js]
+    controllers --> aggController["aggregations.controller.js"]
 
-    routes --> home[home.router.js]
-    routes --> users[user.router.js]
-    routes --> products[product.router.js]
-    routes --> populate[populate.router.js]
-    routes --> aggregations[aggregations.router.js]
+    routes --> home["home.router.js"]
+    routes --> users["user.router.js"]
+    routes --> products["product.router.js"]
+    routes --> populate["populate.router.js"]
+    routes --> aggregations["aggregations.router.js"]
 
-    postman --> usersPostman[Users.postman_collection.json]
-    postman --> productsPostman[Productos.postman_collection.json]
+    postman --> usersPostman["Users.postman_collection.json"]
+    postman --> productsPostman["Productos.postman_collection.json"]
 ```
 
 ## Punto de Entrada
@@ -475,48 +475,48 @@ Respuesta:
 
 ```mermaid
 flowchart LR
-    A[POST /api/users] --> B[Express recibe JSON]
-    B --> C[user.router valida campos]
-    C -->|faltan datos| D[400 Bad Request]
-    C -->|datos correctos| E[UserModel crea documento]
-    E --> F[MongoDB guarda usuario]
-    F --> G[201 Created]
+    A["POST /api/users"] --> B["Express recibe JSON"]
+    B --> C["user.router valida campos"]
+    C -->|faltan datos| D["400 Bad Request"]
+    C -->|datos correctos| E["UserModel crea documento"]
+    E --> F["MongoDB guarda usuario"]
+    F --> G["201 Created"]
 ```
 
 ## Flujo: Agregar un Producto a un Usuario
 
 ```mermaid
 flowchart TD
-    A[POST /api/users/:userId/products/:productId]
-    A --> B[Validar ObjectId de userId y productId]
-    B -->|invalido| C[400 Bad Request]
-    B --> D[Buscar usuario]
-    D --> E[Buscar producto]
-    E --> F{Existen ambos}
-    F -->|No| G[404 Not Found]
-    F -->|Si| H{Producto ya asociado}
-    H -->|Si| I[400 Bad Request]
-    H -->|No| J[Push del productId en user.products]
-    J --> K[Guardar usuario]
-    K --> L[Populate de products]
-    L --> M[201 Created]
+    A["POST /api/users/:userId/products/:productId"]
+    A --> B["Validar ObjectId de userId y productId"]
+    B -->|invalido| C["400 Bad Request"]
+    B --> D["Buscar usuario"]
+    D --> E["Buscar producto"]
+    E --> F{"Existen ambos"}
+    F -->|No| G["404 Not Found"]
+    F -->|Si| H{"Producto ya asociado"}
+    H -->|Si| I["400 Bad Request"]
+    H -->|No| J["Push del productId en user.products"]
+    J --> K["Guardar usuario"]
+    K --> L["Populate de products"]
+    L --> M["201 Created"]
 ```
 
 ## Flujo: Quitar un Producto de un Usuario
 
 ```mermaid
 flowchart TD
-    A[DELETE /api/users/:userId/products/:productId]
-    A --> B[Validar ObjectId]
-    B -->|invalido| C[400 Bad Request]
-    B --> D[Buscar usuario]
-    D --> E[Buscar producto]
-    E --> F{Existen ambos}
-    F -->|No| G[404 Not Found]
-    F -->|Si| H[Filtrar productId del array user.products]
-    H --> I[Guardar usuario]
-    I --> J[Populate de products]
-    J --> K[200 OK]
+    A["DELETE /api/users/:userId/products/:productId"]
+    A --> B["Validar ObjectId"]
+    B -->|invalido| C["400 Bad Request"]
+    B --> D["Buscar usuario"]
+    D --> E["Buscar producto"]
+    E --> F{"Existen ambos"}
+    F -->|No| G["404 Not Found"]
+    F -->|Si| H["Filtrar productId del array user.products"]
+    H --> I["Guardar usuario"]
+    I --> J["Populate de products"]
+    J --> K["200 OK"]
 ```
 
 ## Flujo: Consulta con Populate
@@ -540,13 +540,13 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    A[GET /api/aggregations/productos/resumen] --> B[aggregations.router]
-    B --> C[aggregateProducts controller]
-    C --> D[$sort]
-    D --> E[$group]
-    E --> F[$project]
-    F --> G[$merge into orders]
-    G --> H[200 OK]
+    A["GET /api/aggregations/productos/resumen"] --> B["aggregations.router"]
+    B --> C["aggregateProducts controller"]
+    C --> D["$sort"]
+    D --> E["$group"]
+    E --> F["$project"]
+    F --> G["$merge into orders"]
+    G --> H["200 OK"]
 ```
 
 ## Codigos HTTP Utilizados
