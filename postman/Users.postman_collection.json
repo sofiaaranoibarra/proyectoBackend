@@ -47,7 +47,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"address\": \"Buenos Aires\",\r\n  \"PaymentMethod\": \"credit_card\"\r\n}",
+          "raw": "{\r\n    \"nombre\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"ciudad\": \"Avellaneda\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -85,7 +85,7 @@
           "raw": ""
         },
         "url": {
-          "raw": "http://localhost:3000/api/users/ID_USUARIO",
+          "raw": "http://localhost:3000/api/users/69c19c4cd23688d6db596c2e",
           "protocol": "http",
           "host": [
             "localhost"
@@ -94,14 +94,14 @@
           "path": [
             "api",
             "users",
-            "ID_USUARIO"
+            "69c19c4cd23688d6db596c2e"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Actualizar usuario por ID",
+      "name": "Actualizar un usuario por su ID",
       "request": {
         "auth": {
           "type": "noauth"
@@ -110,7 +110,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"name\": \"John Perez\",\r\n  \"email\": \"john.perez@example.com\",\r\n  \"password\": \"nueva-clave\",\r\n  \"address\": \"Cordoba\",\r\n  \"PaymentMethod\": \"debit_card\"\r\n}",
+          "raw": "{\r\n    \"nombre\": \"Carlos Gomez\",\r\n    \"email\": \"carlos.gomez@example.com\",\r\n    \"ciudad\": \"San Isidro\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -118,7 +118,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/api/users/ID_USUARIO",
+          "raw": "http://localhost:3000/api/users/69c19cddd23688d6db596c38",
           "protocol": "http",
           "host": [
             "localhost"
@@ -127,22 +127,31 @@
           "path": [
             "api",
             "users",
-            "ID_USUARIO"
+            "69c19cddd23688d6db596c38"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Eliminar usuario por ID",
+      "name": "Eliminar un usuario por su ID",
       "request": {
         "auth": {
           "type": "noauth"
         },
         "method": "DELETE",
         "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"John Perez\",\r\n    \"email\": \"john.perez@example.com\",\r\n    \"age\": 80\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
-          "raw": "http://localhost:3000/api/users/ID_USUARIO",
+          "raw": "http://localhost:3000/api/users/69c02feedae80d6c04832fe2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -151,22 +160,19 @@
           "path": [
             "api",
             "users",
-            "ID_USUARIO"
+            "69c02feedae80d6c04832fe2"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Agregar producto a usuario",
+      "name": "Agregar un Producto a un Usuario",
       "request": {
-        "auth": {
-          "type": "noauth"
-        },
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO",
+          "raw": "http://localhost:3000/api/users/69c19c27d23688d6db596c2c/products/69c197047594aac298f686b7",
           "protocol": "http",
           "host": [
             "localhost"
@@ -175,24 +181,21 @@
           "path": [
             "api",
             "users",
-            "ID_USUARIO",
+            "69c19c27d23688d6db596c2c",
             "products",
-            "ID_PRODUCTO"
+            "69c197047594aac298f686b7"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Quitar producto de usuario",
+      "name": "Eliminar un Producto a un Usuario",
       "request": {
-        "auth": {
-          "type": "noauth"
-        },
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO",
+          "raw": "http://localhost:3000/api/users/69c19cddd23688d6db596c38/products/69c197047594aac298f686b7",
           "protocol": "http",
           "host": [
             "localhost"
@@ -201,11 +204,27 @@
           "path": [
             "api",
             "users",
-            "ID_USUARIO",
+            "69c19cddd23688d6db596c38",
             "products",
-            "ID_PRODUCTO"
+            "69c197047594aac298f686b7"
           ]
         }
+      },
+      "response": []
+    },
+    {
+      "name": "Populate Demo",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Aggregations",
+      "request": {
+        "method": "GET",
+        "header": []
       },
       "response": []
     }
