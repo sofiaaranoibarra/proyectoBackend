@@ -1,7 +1,7 @@
 import express from "express";
 import homeRouter from './routes/home.router.js';
-import studentRouter from './routes/user.router.js';
-import cursoRouter from './routes/courses.router.js';
+import userRouter from './routes/user.router.js';
+import productRouter from './routes/product.router.js';
 
 import popularRouter from './routes/populate.router.js';
 import aggregateRouter from './routes/aggregations.router.js';
@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(`/`, homeRouter);
 
 /* Routers API */
-app.use(`/api/students`, studentRouter);
-app.use(`/api/curso`, cursoRouter);
+app.use(`/api/users`, userRouter);
+app.use(`/api/product`, productRouter);
 app.use(`/api/popular`, popularRouter);
 app.use(`/api/aggregations`, aggregateRouter);
 

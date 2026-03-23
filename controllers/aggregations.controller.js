@@ -1,31 +1,29 @@
-import { Curso } from "../config/models/curso.model.js";
+import { Product } from "../config/models/product.model.js";
 
-export const aggregateCourses = async (req, res) => {
+export const aggregateProducts = async (req, res) => {
     try {
+        await Product.aggregate([
+            /* Ordenamos alfabeticamente */
+            { $sort: { product: 1 } },
 
-        const resultado = await Curso.aggregate([
-
-            // Ordenamos Alfabeticamente
-            { $sort: { name: 1 } },
-
-            // Agrupamos todos los cursos en un unico array
+            /* Agrupamos todos los productos en un unico array */
             {
                 $group: {
                     _id: null,
-                    cursos: { $push: "$$ROOT" },
+                    products: { $push: "$$ROOT" },
                 }
             },
 
-            // Creamos un nuevo documento con el resumen de cursos
+            /* Creamos un nuevo documento con el resumen de productos */
             {
                 $project: {
-                    _id: "resumenCursos",
-                    totalCursos: { $size: "$cursos" },
-                    cursos: 1
+                    _id: "resumenProductos",
+                    totalProducts: { $size: "$products" },
+                    products: 1
                 },
             },
 
-            // Guardamos el documento en una coleccion nueva
+            /* Guardamos el documento en una coleccion nueva */
             {
                 $merge: {
                     into: "orders",
@@ -35,10 +33,9 @@ export const aggregateCourses = async (req, res) => {
             }
         ]);
 
-        res.status(200).json({ message: "Resumen generado y guardado en 'orders'" });
-
+        res.status(200).json({ message: "Resumen de productos generado y guardado en 'orders'" });
     } catch (error) {
-        console.error("Error, se produjo un error en aggregateCourses. ", error);
-        res.status(500).json({ error: "Error, se produjo un error en aggregateCourses." });
+        console.error("Error, se produjo un error en aggregateProducts", error);
+        res.status(500).json({ error: "Error, se produjo un error en aggregateProducts" });
     }
-}
+};

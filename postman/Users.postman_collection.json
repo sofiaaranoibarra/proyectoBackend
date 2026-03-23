@@ -23,13 +23,14 @@
           "raw": ""
         },
         "url": {
-          "raw": "http://localhost:3000/users",
+          "raw": "http://localhost:3000/api/users",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
+            "api",
             "users"
           ]
         }
@@ -46,7 +47,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"age\": 30\r\n}",
+          "raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\": \"123456\",\r\n  \"address\": \"Buenos Aires\",\r\n  \"PaymentMethod\": \"credit_card\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -54,13 +55,14 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/users",
+          "raw": "http://localhost:3000/api/users",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
+            "api",
             "users"
           ]
         }
@@ -83,21 +85,23 @@
           "raw": ""
         },
         "url": {
-          "raw": "http://localhost:3000/69be2c26c81f57bd636599bb",
+          "raw": "http://localhost:3000/api/users/ID_USUARIO",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
-            "69be2c26c81f57bd636599bb"
+            "api",
+            "users",
+            "ID_USUARIO"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Actualizar un usuario por su ID",
+      "name": "Actualizar usuario por ID",
       "request": {
         "auth": {
           "type": "noauth"
@@ -106,7 +110,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"John Perez\",\r\n    \"email\": \"john.perez@example.com\",\r\n    \"age\": 80\r\n}",
+          "raw": "{\r\n  \"name\": \"John Perez\",\r\n  \"email\": \"john.perez@example.com\",\r\n  \"password\": \"nueva-clave\",\r\n  \"address\": \"Cordoba\",\r\n  \"PaymentMethod\": \"debit_card\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -114,47 +118,92 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/users/69bf8c134bd56c8093bb724e",
+          "raw": "http://localhost:3000/api/users/ID_USUARIO",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
+            "api",
             "users",
-            "69bf8c134bd56c8093bb724e"
+            "ID_USUARIO"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Eliminar un usuario por su ID",
+      "name": "Eliminar usuario por ID",
       "request": {
         "auth": {
           "type": "noauth"
         },
         "method": "DELETE",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"name\": \"John Perez\",\r\n    \"email\": \"john.perez@example.com\",\r\n    \"age\": 80\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:3000/users/69c02feedae80d6c04832fe2",
+          "raw": "http://localhost:3000/api/users/ID_USUARIO",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
+            "api",
             "users",
-            "69c02feedae80d6c04832fe2"
+            "ID_USUARIO"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Agregar producto a usuario",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "ID_USUARIO",
+            "products",
+            "ID_PRODUCTO"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Quitar producto de usuario",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "ID_USUARIO",
+            "products",
+            "ID_PRODUCTO"
           ]
         }
       },

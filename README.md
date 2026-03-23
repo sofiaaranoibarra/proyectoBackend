@@ -1,57 +1,61 @@
 # Proyecto Backend
 
-API REST desarrollada con Node.js, Express y MongoDB Atlas para la gestion de estudiantes, cursos, consultas con `populate` y operaciones de agregacion.
+API REST construida con Node.js, Express y MongoDB/Mongoose para administrar usuarios, productos, relaciones entre ambos, consultas con `populate` y una agregacion sobre la coleccion de productos.
 
-## Descripcion
+## Objetivo
 
-El proyecto expone una API organizada por recursos y preparada para trabajar con:
+El proyecto expone endpoints HTTP para:
 
-- estudiantes
-- cursos
-- inscripciones entre estudiantes y cursos
-- consultas con `populate`
-- agregaciones sobre la coleccion de cursos
+- crear, listar, buscar, actualizar y eliminar usuarios
+- crear, listar, buscar, actualizar y eliminar productos
+- asociar productos a usuarios
+- quitar productos de usuarios
+- consultar usuarios con sus productos relacionados usando `populate`
+- ejecutar una agregacion y guardar el resultado en otra coleccion
 
-La aplicacion usa Express para el enrutamiento, Mongoose para modelar datos y MongoDB Atlas como base de datos.
-
-## Tecnologias
+## Stack Tecnologico
 
 - Node.js
 - Express
 - Mongoose
-- MongoDB Atlas
+- MongoDB Atlas o MongoDB local
 - ES Modules
 - Nodemon
 - Postman
 
-## Arquitectura
+## Arquitectura General
 
-La estructura actual sigue una separacion simple entre arranque de aplicacion, rutas, controladores y modelos:
+La aplicacion esta organizada en capas simples:
 
-- `app.js`: inicializa Express, monta rutas y arranca el servidor
-- `routes/`: define endpoints HTTP por modulo
-- `controllers/`: contiene logica especializada, hoy usada para agregaciones
-- `config/models/`: define los esquemas y modelos de Mongoose
-- `config/db/`: encapsula la conexion a MongoDB
-- `postman/`: guarda colecciones para pruebas manuales
+- `app.js`: punto de entrada, middlewares, montaje de routers y arranque del servidor
+- `routes/`: define los endpoints HTTP y resuelve la mayor parte de la logica de request/response
+- `controllers/`: encapsula logica especializada, hoy usada en agregaciones
+- `config/models/`: define esquemas y modelos de Mongoose
+- `config/db/`: centraliza la conexion a MongoDB
+- `postman/`: colecciones para pruebas manuales
 
 ## Diagrama de Arquitectura
 
 ```mermaid
 flowchart TD
-    cliente[Cliente o Postman] --> app[Express App]
-    app --> middleware[express.json]
-    middleware --> rutas[Routes]
-    rutas --> controladores[Controllers]
-    rutas --> modelos[Models]
-    controladores --> modelos
-    modelos --> db[(MongoDB Atlas)]
-    db --> modelos
-    modelos --> respuesta[Respuesta JSON]
-    respuesta --> cliente
+    cliente[Cliente o Postman] --> app[app.js]
+    app --> middleware[express.json()]
+    middleware --> routers[Routers]
+    routers --> userRouter[user.router.js]
+    routers --> productRouter[product.router.js]
+    routers --> populateRouter[populate.router.js]
+    routers --> aggregationRouter[aggregations.router.js]
+    aggregationRouter --> controller[aggregations.controller.js]
+    userRouter --> userModel[UserModel]
+    userRouter --> productModel[Product]
+    productRouter --> productModel
+    populateRouter --> userModel
+    controller --> productModel
+    userModel --> mongo[(MongoDB)]
+    productModel --> mongo
 ```
 
-## Flujo Completo de una Request
+## Flujo General de una Request
 
 ```mermaid
 sequenceDiagram
@@ -63,138 +67,231 @@ sequenceDiagram
     participant DB
 
     Cliente->>App: Request HTTP
-    App->>Router: Resuelve endpoint
-    Router->>Router: Valida params y body
-    Router->>Controller: Deriva si aplica
-    Router->>Model: O usa el modelo directo
-    Controller->>Model: Ejecuta logica
-    Model->>DB: Consulta MongoDB
+    App->>Router: Resuelve ruta
+    Router->>Router: Valida params/body
+    alt Ruta con controller
+        Router->>Controller: Ejecuta logica
+        Controller->>Model: Llama al modelo
+    else Ruta directa
+        Router->>Model: Ejecuta consulta
+    end
+    Model->>DB: Operacion MongoDB
     DB-->>Model: Resultado
-    Model-->>Router: Documento o lista
+    Model-->>Router: Documento o coleccion
     Router-->>Cliente: JSON + status code
 ```
 
-## Estructura Actual del Proyecto
+## Estructura del Proyecto
+
+```text
+proyectoBackend/
+├── app.js
+├── README.md
+├── package.json
+├── package-lock.json
+├── atlas.txt
+├── productos.json
+├── config/
+│   ├── db/
+│   │   └── connect.config.js
+│   └── models/
+│       ├── product.model.js
+│       └── user.model.js
+├── controllers/
+│   └── aggregations.controller.js
+├── postman/
+│   ├── Productos.postman_collection.json
+│   └── Users.postman_collection.json
+└── routes/
+    ├── aggregations.router.js
+    ├── home.router.js
+    ├── populate.router.js
+    ├── product.router.js
+    └── user.router.js
+```
+
+## Diagrama de Estructura
 
 ```mermaid
 flowchart TD
     root[proyectoBackend]
-    root --> appjs[app.js]
-    root --> readme[README.md]
-    root --> packagejson[package.json]
-    root --> packagelock[package-lock.json]
-    root --> atlas[atlas.txt]
-    root --> productos[productos.json]
-    root --> controllers[controllers]
+    root --> app[app.js]
     root --> config[config]
+    root --> controllers[controllers]
     root --> routes[routes]
     root --> postman[postman]
+    root --> docs[README.md]
 
-    controllers --> aggregationsController[aggregations.controller.js]
+    config --> db[db]
+    config --> models[models]
+    db --> connect[connect.config.js]
+    models --> userModel[user.model.js]
+    models --> productModel[product.model.js]
 
-    config --> dbFolder[db]
-    config --> modelsFolder[models]
-    dbFolder --> connectConfig[connect.config.js]
-    modelsFolder --> cursoModel[curso.model.js]
-    modelsFolder --> userModel[user.model.js]
+    controllers --> aggController[aggregations.controller.js]
 
-    routes --> homeRouter[home.router.js]
-    routes --> userRouter[user.router.js]
-    routes --> courseRouter[courses.router.js]
-    routes --> populateRouter[populate.router.js]
-    routes --> aggregationsRouter[aggregations.router.js]
+    routes --> home[home.router.js]
+    routes --> users[user.router.js]
+    routes --> products[product.router.js]
+    routes --> populate[populate.router.js]
+    routes --> aggregations[aggregations.router.js]
 
-    postman --> cursoCollection[Curso.postman_collection.json]
-    postman --> usersCollection[Users.postman_collection.json]
-    postman --> productosCollection[Productos.postman_collection.json]
+    postman --> usersPostman[Users.postman_collection.json]
+    postman --> productsPostman[Productos.postman_collection.json]
 ```
 
-## Arranque de la Aplicacion
+## Punto de Entrada
 
-Archivo principal: `app.js`
+El archivo principal es `app.js`.
 
 Responsabilidades:
 
-- crear la aplicacion Express
-- habilitar el middleware `express.json()`
-- montar routers de home y API
-- manejar errores `404`
-- conectar MongoDB
-- iniciar el servidor en el puerto `3000`
+- crea la aplicacion Express
+- habilita `express.json()`
+- monta routers
+- maneja rutas inexistentes con respuesta `404`
+- conecta a MongoDB
+- levanta el servidor en el puerto `3000`
 
-Rutas montadas actualmente:
+Routers montados:
 
 - `/`
-- `/api/students`
-- `/api/curso`
+- `/api/users`
+- `/api/product`
 - `/api/popular`
 - `/api/aggregations`
 
-## Modelos de Datos
-
-### `User`
-
-Definido en `config/models/user.model.js`
-
-Campos:
-
-- `name`: `String`, obligatorio
-- `email`: `String`, obligatorio, unico
-- `age`: `Number`, obligatorio
-
-### `Curso`
-
-Definido en `config/models/curso.model.js`
-
-Campos:
-
-- `title`: `String`, obligatorio, indexado
-- `description`: `String`, opcional
-- `students`: arreglo de `ObjectId` con referencia a `User`
-
-## Relacion de Datos
-
-```mermaid
-erDiagram
-    USER {
-        string _id
-        string name
-        string email
-        int age
-    }
-
-    CURSO {
-        string _id
-        string title
-        string description
-        array students
-    }
-
-    USER }o--o{ CURSO : inscripcion
-```
-
 ## Conexion a Base de Datos
 
-La conexion se resuelve desde `config/db/connect.config.js`.
+La conexion vive en `config/db/connect.config.js`.
 
-Modos contemplados:
+Soporta dos modos:
 
 - `local`
 - `atlas`
 
-Actualmente el servidor arranca con:
+Actualmente el proyecto arranca con:
 
 ```js
 await connectMongoDB("atlas");
 ```
 
-## Endpoints y Metodos
+La funcion selecciona la URL segun el modo recibido y luego ejecuta `mongoose.connect(URL)`.
+
+## Modelos de Datos
+
+### User
+
+Definido en `config/models/user.model.js`.
+
+Campos:
+
+- `nombre`: `String`, obligatorio
+- `email`: `String`, obligatorio, unico e indexado
+- `ciudad`: `String`, opcional
+- `products`: `ObjectId[]`, referencia a `Product`
+
+Hooks:
+
+- `pre('save')`: imprime en consola el nombre del usuario guardado
+- `post('find')`: imprime cuántos usuarios fueron consultados
+
+### Product
+
+Definido en `config/models/product.model.js`.
+
+Campos:
+
+- `nombre`: `String`, obligatorio e indexado
+- `marca`: `String`, opcional
+- `color`: `String`, opcional
+- `precio`: `Number`, obligatorio
+- `stock`: `Number`, obligatorio
+
+## Relacion entre Entidades
+
+La relacion actual se modela desde el usuario:
+
+- un usuario puede tener muchos productos
+- el usuario guarda un arreglo `products` con referencias a documentos `Product`
+
+```mermaid
+erDiagram
+    USER {
+        string _id
+        string nombre
+        string email
+        string ciudad
+        array products
+    }
+
+    PRODUCT {
+        string _id
+        string nombre
+        string marca
+        string color
+        number precio
+        number stock
+    }
+
+    USER ||--o{ PRODUCT : references
+```
+
+## Routers y Responsabilidades
+
+### Home Router
+
+Archivo: `routes/home.router.js`
+
+Endpoints:
+
+- `GET /`
+
+Devuelve una respuesta simple de bienvenida.
+
+### User Router
+
+Archivo: `routes/user.router.js`
+
+Responsabilidades:
+
+- CRUD de usuarios
+- asignacion de productos a usuarios
+- eliminacion de productos de usuarios
+- consultas con `populate("products")`
+
+### Product Router
+
+Archivo: `routes/product.router.js`
+
+Responsabilidades:
+
+- CRUD de productos
+- validacion de `ObjectId` en lecturas y actualizaciones por ID
+
+### Populate Router
+
+Archivo: `routes/populate.router.js`
+
+Responsabilidad:
+
+- consultar usuarios junto con sus productos referenciados usando `populate`
+
+### Aggregations Router
+
+Archivo: `routes/aggregations.router.js`
+
+Responsabilidad:
+
+- delegar al controller de agregaciones la construccion de un resumen de productos
+
+## Endpoints Disponibles
 
 ### Home
 
 #### `GET /`
 
-Respuesta simple de bienvenida:
+Respuesta:
 
 ```json
 {
@@ -202,86 +299,140 @@ Respuesta simple de bienvenida:
 }
 ```
 
-### Students
+### Usuarios
 
-Base path: `/api/students`
+Base path: `/api/users`
 
-#### `GET /api/students`
+#### `GET /api/users`
 
-Obtiene todos los estudiantes.
+Obtiene todos los usuarios.
 
-#### `POST /api/students`
+Respuesta:
 
-Crea un estudiante nuevo.
+```json
+{
+  "users": []
+}
+```
+
+#### `POST /api/users`
+
+Crea un usuario.
 
 Body de ejemplo:
 
 ```json
 {
-  "name": "Sofia Arano",
-  "email": "sofia.arano@example.com",
-  "age": 32
+  "nombre": "Sofia",
+  "email": "sofia@example.com",
+  "ciudad": "Buenos Aires"
 }
 ```
 
-#### `GET /api/students/:id`
+Respuestas esperadas:
 
-Busca un estudiante por `ObjectId`.
+- `201` si el usuario fue creado
+- `400` si faltan campos obligatorios
+- `500` si ocurre un error del servidor
 
-Comportamiento:
+#### `GET /api/users/:id`
 
-- `400` si el id tiene formato invalido
-- `404` si el estudiante no existe
+Busca un usuario por `ObjectId` y ademas hace `populate("products")`.
 
-#### `PUT /api/students/:id`
+Respuestas esperadas:
 
-Actualiza un estudiante existente.
+- `200` si existe
+- `400` si el formato del ID es invalido
+- `404` si el usuario no existe
 
-#### `DELETE /api/students/:id`
+#### `PUT /api/users/:id`
 
-Elimina un estudiante por id.
+Actualiza un usuario por ID con `findByIdAndUpdate`.
 
-### Cursos
+Opciones usadas:
 
-Base path: `/api/curso`
+- `returnDocument: "after"`
+- `runValidators: true`
 
-#### `GET /api/curso`
+#### `DELETE /api/users/:id`
 
-Obtiene todos los cursos.
+Elimina un usuario por ID.
 
-#### `POST /api/curso`
+Respuesta:
 
-Crea un nuevo curso.
+- `204` si se elimina correctamente
+
+#### `POST /api/users/:userId/products/:productId`
+
+Agrega un producto a un usuario.
+
+Validaciones aplicadas:
+
+- formato valido de ambos IDs
+- existencia del usuario
+- existencia del producto
+- control de duplicados
+
+#### `DELETE /api/users/:userId/products/:productId`
+
+Quita un producto del arreglo `products` de un usuario.
+
+Validaciones aplicadas:
+
+- formato valido de ambos IDs
+- existencia del usuario
+- existencia del producto
+
+### Productos
+
+Base path: `/api/product`
+
+#### `GET /api/product`
+
+Obtiene todos los productos.
+
+#### `POST /api/product`
+
+Crea un producto.
 
 Body de ejemplo:
 
 ```json
 {
-  "title": "Backend Avanzado",
-  "description": "Curso de Node.js con MongoDB",
-  "students": []
+  "nombre": "Monitor",
+  "marca": "Samsung",
+  "color": "Negro",
+  "precio": 350000,
+  "stock": 8
 }
 ```
 
-#### `POST /api/curso/:courseId/inscription/:studentId`
+#### `GET /api/product/:id`
 
-Inscribe un estudiante en un curso.
+Busca un producto por `ObjectId`.
 
-Proceso:
+Respuestas esperadas:
 
-- busca el curso por `courseId`
-- busca el estudiante por `studentId`
-- valida que ambos existan
-- valida que no haya duplicados
-- agrega el `ObjectId` del alumno al array `students`
+- `200` si existe
+- `400` si el ID es invalido
+- `404` si no existe
 
-#### `DELETE /api/curso/:courseId/desinscription/:studentId`
+#### `PUT /api/product/:id`
 
-Desinscribe un estudiante de un curso.
+Actualiza un producto por ID.
 
-#### `DELETE /api/curso/:courseId`
+Opciones usadas:
 
-Elimina un curso.
+- `returnDocument: "after"`
+- `runValidators: true`
+
+#### `DELETE /api/product/:productId`
+
+Elimina un producto por ID.
+
+Respuesta:
+
+- `204` si se elimina correctamente
 
 ### Populate
 
@@ -289,65 +440,116 @@ Base path: `/api/popular`
 
 #### `GET /api/popular/demo`
 
-Ejecuta una consulta con `populate` sobre `students` para traer datos completos de los estudiantes asociados a cada curso.
+Devuelve la lista de usuarios con sus productos poblados.
 
-Campos poblados:
+Consulta ejecutada:
 
-- `name`
-- `email`
-- `age`
-- `_id`
+```js
+UserModel.find().populate("products");
+```
 
 ### Aggregations
 
 Base path: `/api/aggregations`
 
-#### `GET /api/aggregations/cursos/resumen`
+#### `GET /api/aggregations/productos/resumen`
 
-Ejecuta una agregacion sobre la coleccion de cursos.
+Ejecuta una agregacion sobre `Product` y guarda el resultado en la coleccion `orders`.
 
-El flujo actual:
+La pipeline actual:
 
-- ordena cursos
-- agrupa todos los cursos en un unico array
-- proyecta un resumen con total de cursos
-- guarda el resultado en la coleccion `orders` mediante `$merge`
+- ordena los documentos
+- agrupa todos los productos en un solo arreglo
+- proyecta un documento resumen
+- hace `$merge` hacia `orders`
 
-Respuesta actual:
+Respuesta:
 
 ```json
 {
-  "message": "Resumen generado y guardado en 'orders'"
+  "message": "Resumen de productos generado y guardado en 'orders'"
 }
 ```
 
-## Flujo de Inscripcion
+## Flujo: Crear un Usuario
 
 ```mermaid
 flowchart LR
-    inicio[POST inscripcion] --> buscarCurso[Buscar curso]
-    buscarCurso --> buscarAlumno[Buscar estudiante]
-    buscarAlumno --> validar{Existen ambos}
-    validar -- No --> error404[Respuesta 404]
-    validar -- Si --> repetido{Ya esta inscripto}
-    repetido -- Si --> error400[Respuesta 400]
-    repetido -- No --> agregar[Agregar studentId al curso]
-    agregar --> guardar[Guardar curso]
-    guardar --> ok[Respuesta 201]
+    A[POST /api/users] --> B[Express recibe JSON]
+    B --> C[user.router valida campos]
+    C -->|faltan datos| D[400 Bad Request]
+    C -->|datos correctos| E[UserModel crea documento]
+    E --> F[MongoDB guarda usuario]
+    F --> G[201 Created]
 ```
 
-## Flujo de Aggregation
+## Flujo: Agregar un Producto a un Usuario
 
 ```mermaid
 flowchart TD
-    request[GET resumen cursos] --> sort[Sort de cursos]
-    sort --> group[Group en un unico documento]
-    group --> project[Project con totalCursos]
-    project --> merge[Merge en orders]
-    merge --> response[Respuesta 200]
+    A[POST /api/users/:userId/products/:productId]
+    A --> B[Validar ObjectId de userId y productId]
+    B -->|invalido| C[400 Bad Request]
+    B --> D[Buscar usuario]
+    D --> E[Buscar producto]
+    E --> F{Existen ambos}
+    F -->|No| G[404 Not Found]
+    F -->|Si| H{Producto ya asociado}
+    H -->|Si| I[400 Bad Request]
+    H -->|No| J[Push del productId en user.products]
+    J --> K[Guardar usuario]
+    K --> L[Populate de products]
+    L --> M[201 Created]
 ```
 
-## Estados HTTP Utilizados
+## Flujo: Quitar un Producto de un Usuario
+
+```mermaid
+flowchart TD
+    A[DELETE /api/users/:userId/products/:productId]
+    A --> B[Validar ObjectId]
+    B -->|invalido| C[400 Bad Request]
+    B --> D[Buscar usuario]
+    D --> E[Buscar producto]
+    E --> F{Existen ambos}
+    F -->|No| G[404 Not Found]
+    F -->|Si| H[Filtrar productId del array user.products]
+    H --> I[Guardar usuario]
+    I --> J[Populate de products]
+    J --> K[200 OK]
+```
+
+## Flujo: Consulta con Populate
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant Router
+    participant UserModel
+    participant MongoDB
+
+    Cliente->>Router: GET /api/popular/demo
+    Router->>UserModel: find().populate("products")
+    UserModel->>MongoDB: Buscar usuarios y resolver referencias
+    MongoDB-->>UserModel: Usuarios + productos
+    UserModel-->>Router: Resultado poblado
+    Router-->>Cliente: 200 OK
+```
+
+## Flujo: Aggregation de Productos
+
+```mermaid
+flowchart LR
+    A[GET /api/aggregations/productos/resumen] --> B[aggregations.router]
+    B --> C[aggregateProducts controller]
+    C --> D[$sort]
+    D --> E[$group]
+    E --> F[$project]
+    F --> G[$merge into orders]
+    G --> H[200 OK]
+```
+
+## Codigos HTTP Utilizados
 
 - `200 OK`
 - `201 Created`
@@ -358,13 +560,14 @@ flowchart TD
 
 ## Manejo de Errores
 
-El proyecto incluye:
+El proyecto maneja errores principalmente con:
 
-- `try/catch` en varios endpoints
-- validacion de `ObjectId` en rutas de estudiantes
-- middleware global para rutas no encontradas
+- bloques `try/catch`
+- validacion de `ObjectId` en varios endpoints
+- respuestas `404` para documentos inexistentes
+- middleware final para rutas no encontradas
 
-Respuesta global `404`:
+Respuesta del middleware `404`:
 
 ```json
 {
@@ -372,114 +575,115 @@ Respuesta global `404`:
 }
 ```
 
-## Ejemplos Rapidos para Postman
+## Scripts Disponibles
 
-### Crear estudiante
-
-```http
-POST http://localhost:3000/api/students
-Content-Type: application/json
-```
-
-```json
-{
-  "name": "Natalia Perez",
-  "email": "natalia.perez@example.com",
-  "age": 24
-}
-```
-
-### Buscar estudiante por ID
-
-```http
-GET http://localhost:3000/api/students/69bf8c134bd56c8093bb724e
-```
-
-### Crear curso
-
-```http
-POST http://localhost:3000/api/curso
-Content-Type: application/json
-```
-
-```json
-{
-  "title": "Backend Avanzado",
-  "description": "Curso de Node.js con MongoDB",
-  "students": []
-}
-```
-
-### Inscribir estudiante
-
-```http
-POST http://localhost:3000/api/curso/ID_CURSO/inscription/ID_ESTUDIANTE
-```
-
-### Probar populate
-
-```http
-GET http://localhost:3000/api/popular/demo
-```
-
-### Ejecutar aggregation
-
-```http
-GET http://localhost:3000/api/aggregations/cursos/resumen
-```
-
-## Como Ejecutar el Proyecto
-
-### 1. Instalar dependencias
+### Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### 2. Iniciar el servidor
-
-Modo desarrollo:
+### Modo desarrollo
 
 ```bash
 npm run dev
 ```
 
-Modo normal:
+### Modo normal
 
 ```bash
 npm start
 ```
 
-### 3. Probar en local
+## Colecciones de Postman
 
-```text
-http://localhost:3000
-```
-
-## Colecciones Postman
-
-Archivos disponibles:
+Archivos incluidos:
 
 - `postman/Users.postman_collection.json`
-- `postman/Curso.postman_collection.json`
 - `postman/Productos.postman_collection.json`
+
+Casos cubiertos:
+
+- CRUD de usuarios
+- CRUD de productos
+- agregar producto a usuario
+- quitar producto de usuario
+
+## Ejemplos Rapidos
+
+### Crear usuario
+
+```http
+POST http://localhost:3000/api/users
+Content-Type: application/json
+```
+
+```json
+{
+  "nombre": "Lucia",
+  "email": "lucia@example.com",
+  "ciudad": "Cordoba"
+}
+```
+
+### Crear producto
+
+```http
+POST http://localhost:3000/api/product
+Content-Type: application/json
+```
+
+```json
+{
+  "nombre": "Teclado",
+  "marca": "Logitech",
+  "color": "Negro",
+  "precio": 48000,
+  "stock": 14
+}
+```
+
+### Agregar producto a usuario
+
+```http
+POST http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO
+```
+
+### Quitar producto de usuario
+
+```http
+DELETE http://localhost:3000/api/users/ID_USUARIO/products/ID_PRODUCTO
+```
+
+### Obtener usuarios con populate
+
+```http
+GET http://localhost:3000/api/popular/demo
+```
+
+### Ejecutar agregacion
+
+```http
+GET http://localhost:3000/api/aggregations/productos/resumen
+```
 
 ## Observaciones Tecnicas
 
-- las rutas API ahora usan prefijo `/api`
-- estudiantes y cursos siguen una relacion por referencias
-- `populate` permite resolver esas referencias al consultar cursos
-- la agregacion actual guarda el resumen en la coleccion `orders`
-- el proyecto usa ES Modules con `import` y `export`
+- el proyecto usa `type: "module"` y por eso trabaja con `import` y `export`
+- la mayor parte de la logica esta actualmente en los routers
+- las agregaciones estan separadas en un controller dedicado
+- `populate` resuelve la referencia desde `User.products` hacia `Product`
+- el servidor arranca configurado para conectar a MongoDB Atlas
 
-## Mejoras Posibles
+## Mejoras Recomendadas
 
-- mover mas logica desde `routes/` a `controllers/`
-- agregar validaciones de `ObjectId` en cursos y aggregations
-- usar variables de entorno para credenciales y configuracion
-- incorporar servicios para separar reglas de negocio
-- agregar tests automatizados
-- documentar la API con Swagger
+- mover credenciales de MongoDB a variables de entorno
+- unificar nombres de campos y mensajes de respuesta
+- separar logica de negocio en servicios
+- agregar validaciones de body mas estrictas
+- incorporar tests automatizados
+- documentar la API con Swagger/OpenAPI
+- agregar paginacion y filtros en listados
 
 ## Autor
 

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { aggregateCourses } from "../controllers/aggregations.controller.js";
+import { aggregateProducts } from "../controllers/aggregations.controller.js";
 
 const router = Router();
 
-router.get('/cursos/resumen', aggregateCourses);
+router.get('/productos/resumen', aggregateProducts);
 
 export default router;
